@@ -49,15 +49,18 @@ exit;
 
 
 sub process_directory {
-	my($folder) = @_;
+	my($directory) = @_;
 	
-	opendir(my $DIR, $folder);
+	opendir(my $DIR, $directory);
 	foreach my $de (readdir($DIR)) {
 		next if ($de =~ /^\.{1,2}$/);
 		
-		if (-d $folder.'/'.$de) {
+		# Full path to the current directory entry
+		my $entry_path = $directory.'/'.$de;
+		
+		if (-d $entry_path) {
 			# This is a folder, call this routine recursively
-			processdir($folder.'/'.$de);
+			process_directory($entry_path);
 			
 		} elsif ($de =~ /^(.+)\.(mp4|mkv|mov|avi|mpg|mpeg|wmv|m4v|flv|f4v)$/i) {
 			# This is a videofile
@@ -66,13 +69,13 @@ sub process_directory {
 			my $filename = $1;
 			my $suffix = $2;
 			
-			print 'File: '.$folder.'/'.$de;
+			print 'File: '.$entry_path;
 			
 			if ($de =~ /-ReEncode-$X265_QUALITY\.$suffix$/i) {
 				# This file has been Re-encoded, skip
 				print ' exist, skipping...'."\n";
 				
-			} elsif (-e ($folder.'/'.$filename.'-ReEncode-'.$X265_QUALITY.'.mp4')) {
+			} elsif (-e ($directory.'/'.$filename.'-ReEncode-'.$X265_QUALITY.'.mp4')) {
 				# Re-encoded file exist, skip
 				print ' exist, skipping...'."\n";
 				
@@ -81,8 +84,8 @@ sub process_directory {
 
 				print ' re-encoding...'."\n";
 			
-				`ffmpeg -y -i "$folder/$de" -c:v libx265 -crf $X265_QUALITY -preset $X265_PRESET -pix_fmt yuv420p10le -x265-params "pass=1:vbv-maxrate=$X265_MAX_BITRATE:vbv-bufsize=$X265_MAX_BITRATE" -an -f mp4 NUL`;
-				`ffmpeg -y -i "$folder/$de" -c:v libx265 -crf $X265_QUALITY -preset $X265_PRESET -pix_fmt yuv420p10le -x265-params "pass=1:vbv-maxrate=$X265_MAX_BITRATE:vbv-bufsize=$X265_MAX_BITRATE" -c:a aac -b:a 128k -ac 2 "$folder/$filename-ReEncode-$X265_QUALITY.mp4"`;
+				`ffmpeg -y -hide_banner -loglevel error -i "$entry_path" -c:v libx265 -crf $X265_QUALITY -preset $X265_PRESET -pix_fmt yuv420p10le -x265-params "pass=1:vbv-maxrate=$X265_MAX_BITRATE:vbv-bufsize=$X265_MAX_BITRATE" -an -f mp4 NUL`;
+				`ffmpeg -y -hide_banner -loglevel error -i "$entry_path" -c:v libx265 -crf $X265_QUALITY -preset $X265_PRESET -pix_fmt yuv420p10le -x265-params "pass=1:vbv-maxrate=$X265_MAX_BITRATE:vbv-bufsize=$X265_MAX_BITRATE" -c:a aac -b:a 128k -ac 2 "$directory/$filename-ReEncode-$X265_QUALITY.mp4"`;
 				
 				print "\n\n\n";
 			}
