@@ -59,6 +59,9 @@ sub processdir {
 			processdir($folder.'/'.$de);
 			
 		} elsif ($de =~ /^(.+)\.(mp4|mkv|mov|avi|mpg|mpeg|wmv|m4v|flv|f4v)$/i) {
+			# This is a videofile
+
+  			# Get filename and type from regex above
 			my $filename = $1;
 			my $suffix = $2;
 			
