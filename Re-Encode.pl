@@ -41,13 +41,14 @@ my $X265_MAX_BITRATE = 10000; # Kbit/s
 
 use strict;
 
-processdir('.');
+# Start processing from the current directory
+process_directory('.');
 
 exit;
 
 
 
-sub processdir {
+sub process_directory {
 	my($folder) = @_;
 	
 	opendir(my $DIR, $folder);
