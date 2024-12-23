@@ -1,14 +1,51 @@
+# MIT License
+#
+# Copyright (c) 2024 Sigmund Straumland
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
-#$X265_QUALITY = 18; # Virtually lossless
-$X265_QUALITY = 28; # Movies/Series
+
+
+# Quality setting
+# $X265_QUALITY = 18; # Virtually lossless
+# $X265_QUALITY = 22; # Small files, visually as good as identical
+$X265_QUALITY = 28; # Small files, but may generate visual artifacts
+
+# X265 preset
 $X265_PRESET = 'medium'; # slower/slow/medium/fast/veryfast
+
+# Max bitrate, you may want to increase this for higher resolutions than 1080p
 $X265_MAX_BITRATE = 10000; # Kbit/s
 
 
 
+# No need to edit below here
+
+
+
+use strict;
+
 processdir('.');
 
 exit;
+
+
 
 sub processdir {
 	my($folder) = @_;
