@@ -23,15 +23,15 @@
 
 
 # Quality setting
-# $X265_QUALITY = 18; # Virtually lossless
-# $X265_QUALITY = 22; # Small files, visually as good as identical
-$X265_QUALITY = 28; # Small files, but may generate visual artifacts
+# my $X265_QUALITY = 18; # Virtually lossless
+# my $X265_QUALITY = 22; # Small files, visually as good as identical
+my $X265_QUALITY = 28; # Small files, but may generate visual artifacts
 
 # X265 preset
-$X265_PRESET = 'medium'; # slower/slow/medium/fast/veryfast
+my $X265_PRESET = 'medium'; # slower/slow/medium/fast/veryfast
 
 # Max bitrate, you may want to increase this for higher resolutions than 1080p
-$X265_MAX_BITRATE = 10000; # Kbit/s
+my $X265_MAX_BITRATE = 10000; # Kbit/s
 
 
 
@@ -50,18 +50,17 @@ exit;
 sub processdir {
 	my($folder) = @_;
 	
-	my($DIR,$de,$suffix);
-	
-	opendir($DIR,$folder);
-	foreach $de (readdir($DIR)) {
-		next if ($de eq '.');
-		next if ($de eq '..');
+	opendir(my $DIR, $folder);
+	foreach my $de (readdir($DIR)) {
+		next if ($de =~ /^\.{1,2}$/);
 		
 		if (-d $folder.'/'.$de) {
+			# This is a folder, call this routine recursively
 			processdir($folder.'/'.$de);
+			
 		} elsif ($de =~ /^(.+)\.(mp4|mkv|mov|avi|mpg|mpeg|wmv|m4v|flv|f4v)$/i) {
-			$filename = $1;
-			$suffix = $2;
+			my $filename = $1;
+			my $suffix = $2;
 			
 			print 'File: '.$folder.'/'.$de;
 			
@@ -79,10 +78,9 @@ sub processdir {
 				print ' re-encoding...'."\n";
 			
 				`ffmpeg -y -i "$folder/$de" -c:v libx265 -crf $X265_QUALITY -preset $X265_PRESET -pix_fmt yuv420p10le -x265-params "pass=1:vbv-maxrate=$X265_MAX_BITRATE:vbv-bufsize=$X265_MAX_BITRATE" -an -f mp4 NUL`;
-				
 				`ffmpeg -y -i "$folder/$de" -c:v libx265 -crf $X265_QUALITY -preset $X265_PRESET -pix_fmt yuv420p10le -x265-params "pass=1:vbv-maxrate=$X265_MAX_BITRATE:vbv-bufsize=$X265_MAX_BITRATE" -c:a aac -b:a 128k -ac 2 "$folder/$filename-ReEncode-$X265_QUALITY.mp4"`;
 				
-				print "\n";
+				print "\n\n\n";
 			}
 		}
 		
