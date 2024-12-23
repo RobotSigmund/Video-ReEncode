@@ -24,7 +24,7 @@
 
 # Quality setting
 # my $X265_QUALITY = 18; # Virtually lossless
-# my $X265_QUALITY = 22; # Small files, visually as good as identical
+# my $X265_QUALITY = 22; # Small files, visually very close to identical
 my $X265_QUALITY = 28; # Small files, but may generate visual artifacts
 
 # X265 preset
