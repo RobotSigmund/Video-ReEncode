@@ -5,6 +5,7 @@ Good for archiving mobile, GoPro, DJI, dashcam etc. videofiles. Re-encode with a
 This script will traverse the script-folder recursively, looking for videofiles and re-encode them. Re-encoded files will be skipped, and files with a re-encoded counterpart will also be skipped.
 
 Default settings:
+* video: x265, audio: aac/128/stereo
 * Two pass
 * Medium profile
 * Quality Setting of 22
