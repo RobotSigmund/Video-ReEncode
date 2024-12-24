@@ -73,11 +73,11 @@ sub process_directory {
 			
 			if ($de =~ /-ReEncode-$X265_QUALITY\.$suffix$/i) {
 				# This file has been Re-encoded, skip
-				print ' exist, skipping...'."\n";
+				print ' re-encoded file, skipping...'."\n";
 				
 			} elsif (-e ($directory.'/'.$filename.'-ReEncode-'.$X265_QUALITY.'.mp4')) {
 				# Re-encoded file exist, skip
-				print ' exist, skipping...'."\n";
+				print ' allreade re-encoded, skipping...'."\n";
 				
 			} else {
 				# Re-encode
@@ -87,8 +87,9 @@ sub process_directory {
 				`ffmpeg -y -v error -stats -i "$entry_path" -c:v libx265 -crf $X265_QUALITY -preset $X265_PRESET -pix_fmt yuv420p10le -x265-params "pass=1:vbv-maxrate=$X265_MAX_BITRATE:vbv-bufsize=$X265_MAX_BITRATE:log-level=1" -an -f mp4 NUL`;
 				print '  Pass 2:'."\n";
 				`ffmpeg -y -v error -stats -i "$entry_path" -c:v libx265 -crf $X265_QUALITY -preset $X265_PRESET -pix_fmt yuv420p10le -x265-params "pass=1:vbv-maxrate=$X265_MAX_BITRATE:vbv-bufsize=$X265_MAX_BITRATE:log-level=1" -c:a aac -b:a 128k -ac 2 "$directory/$filename-ReEncode-$X265_QUALITY.mp4"`;
-				
-				print "\n\n\n";
+				unlink('x265_2pass.log');
+				unlink('x265_2pass.log.cutree');
+				print "\n";
 			}
 		}
 		
