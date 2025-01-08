@@ -44,6 +44,12 @@ use strict;
 # Start processing from the current directory
 process_directory('.');
 
+print 'Done'."\n";
+
+<STDIN>;
+
+
+
 exit;
 
 
