@@ -1,4 +1,6 @@
-# Video-ReEncode
+# ReEncode.pl
+
+Will search recursively for videofiles in script directory and encode a new version of each videofile with selected settings and filename-suffix "ReEncode-<n>".
 
 Good for archiving mobile, GoPro, DJI, dashcam etc. videofiles. Re-encode with a double-click.
 
@@ -14,6 +16,16 @@ Default settings:
 This will generally encode 1080p files with minor artifacts quality wise. A setting of 22 will produce allmost identical quality, but much smaller filesize than any mobile or camera will generate. For as good as lossless and identical quality choose 18.
 
 Note: For 4k footage you may want to increase max bitrate setting, however it will most likely be just fine at 10K.
+
+# Extract-Frames.pl
+
+All videoframes of the first found video in the script folder will be stored in a new folder with the same name as the video file.
+
+Useful for AI upscaling with stable-diffusion.
+
+# Thumbnails.pl
+
+Creates a "screens" folder in the script folder and an image containing <n> thumbnails of any found videofiles.
 
 # FFmpeg
 
