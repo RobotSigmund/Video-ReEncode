@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2024 Sigmund Straumland
+# Copyright (c) 2025 Sigmund Straumland
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -41,6 +41,8 @@ my $X265_MAX_BITRATE = 10000; # Kbit/s
 
 use strict;
 
+print '['.$0.']'."\n";
+
 # Start processing from the current directory
 process_directory('.');
 
@@ -68,7 +70,7 @@ sub process_directory {
 			# This is a folder, call this routine recursively
 			process_directory($entry_path);
 			
-		} elsif ($de =~ /^(.+)\.(mp4|mkv|mov|avi|mpg|mpeg|wmv|m4v|flv|f4v)$/i) {
+		} elsif ($de =~ /^(.+)\.(mp4|mkv|mov|avi|mpg|mpeg|wmv|m4v|flv|f4v|vob|divx)$/i) {
 			# This is a videofile
 
   			# Get filename and type from regex above
@@ -83,7 +85,7 @@ sub process_directory {
 				
 			} elsif (-e ($directory.'/'.$filename.'-ReEncode-'.$X265_QUALITY.'.mp4')) {
 				# Re-encoded file exist, skip
-				print ' allreade re-encoded, skipping...'."\n";
+				print ' allready re-encoded, skipping...'."\n";
 				
 			} else {
 				# Re-encode
