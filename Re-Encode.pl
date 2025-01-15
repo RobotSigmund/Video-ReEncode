@@ -95,7 +95,8 @@ sub process_directory {
 				# Re-encode
 
 				print ' re-encoding...'."\n";
-				`ffmpeg -y -v error -stats -i "$entry_path" -c:v libx265 -crf $X265_QUALITY -preset $X265_PRESET -pix_fmt yuv420p10le -x265-params vbv-maxrate=$X265_MAX_BITRATE -c:a aac -b:a 128k -ac 2 "$directory/$filename-ReEncode-$X265_QUALITY.mp4"`;
+				my $cmd = 'ffmpeg -y -v error -stats -i "'.$entry_path.'" -c:v libx265 -crf '.$X265_QUALITY.' -preset '.$X265_PRESET.' -pix_fmt yuv420p10le -x265-params vbv-maxrate='.$X265_MAX_BITRATE.':vbv-bufsize='.($X265_MAX_BITRATE * 2).':log-level=1 -c:a aac -b:a 128k -ac 2 "'.$directory.'/'.$filename.'-ReEncode-'.$X265_QUALITY.'.mp4"';
+				`$cmd`;
 				print "\n";
 			}
 		}
