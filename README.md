@@ -1,4 +1,4 @@
-# ReEncode.pl
+## Re-Encode.pl
 
 Will search recursively for videofiles in script directory and encode a new version of each videofile with selected settings and filename-suffix "ReEncode-<n>".
 
@@ -17,17 +17,17 @@ This will generally encode 1080p files with minor artifacts quality wise. A sett
 
 Note: For 4k footage you may want to increase max bitrate setting, however it will most likely be just fine at 10K.
 
-# Extract-Frames.pl
+## Extract-Frames.pl
 
 All videoframes of the first found video in the script folder will be stored in a new folder with the same name as the video file.
 
 Useful for AI upscaling with stable-diffusion.
 
-# Thumbnails.pl
+## Thumbnails.pl
 
 Creates a "screens" folder in the script folder and an image containing <n> thumbnails of any found videofiles.
 
-# FFmpeg
+## FFmpeg
 
 FFMpeg is used for encoding. Download most recent version here:
 
@@ -35,7 +35,7 @@ FFMpeg is used for encoding. Download most recent version here:
 
 For windows, unzip, and add folder containing ffmpeg.exe to windows PATH environment variable.
 
-# Perl for windows
+## Perl for windows
 
 [strawberryperl.com](https://strawberryperl.com/)
 
