@@ -8,14 +8,15 @@ This script will traverse the script-folder recursively, looking for videofiles 
 
 Default settings:
 * Container: MP4, video: x265, audio: aac/128/stereo
-* Two pass
-* Medium profile
+* Fast profile
 * Quality Setting of 28
 * Max bitrate of 10000Kbit/s
 
 This will generally encode 1080p files with minor artifacts quality wise. A setting of 22 will produce allmost identical quality, but much smaller filesize than any mobile or camera will generate. For as good as lossless and identical quality choose 18.
 
 Note: For 4k footage you may want to increase max bitrate setting, however it will most likely be just fine at 10K.
+
+Read more about x265 encoding here: [https://kokomins.wordpress.com/2019/10/10/anime-encoding-guide-for-x265-and-why-to-never-use-flac/](https://kokomins.wordpress.com/2019/10/10/anime-encoding-guide-for-x265-and-why-to-never-use-flac/)
 
 ## Extract-Frames.pl
 
