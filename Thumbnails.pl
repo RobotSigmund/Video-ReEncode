@@ -34,6 +34,9 @@ our $CFG_ROWS = 3; # multiplier of screen height of 1080
 
 use strict;
 
+
+
+# Print script path
 print '['.$0.']'."\n";
 
 # Start processing from the current directory
@@ -103,10 +106,11 @@ sub process_file {
 	print ', Deleting tempfiles';	
 	opendir(my $DIR, $folder.'/'.$filename.'-temp');
 	foreach my $de (readdir($DIR)) {
-		unlink($folder.'/'.$filename.'-temp/'.$de);
+		next if ($de =~ /^\.{1,2}$/);
+		unlink($folder.'/'.$filename.'-temp/'.$de) or warn 'ERROR: Could not delete temporary file "'.$folder.'/'.$filename.'-temp/'.$de.'"'."\n";
 	}
 	closedir($DIR);
-	rmdir($folder.'/'.$filename.'-temp');
+	rmdir($folder.'/'.$filename.'-temp') or warn 'ERROR: Could not delete temporary folder "'.$folder.'/'.$filename.'-temp"'."\n";
 	
 	if ($status) {
 		print ', failed'."\n";
@@ -196,7 +200,7 @@ sub thumbs_file {
 	`$cmd`;
 	
 	# Create "screens" folder if necessary
-	mkdir('./screens') unless (-e './screens');
+	mkdir('./screens') or die 'ERROR: Could not create "screens" folder'."\n" unless (-d './screens');
 	
 	# Build ffmpeg command for composite image
 	$cmd = 'ffmpeg -y -v quiet';
@@ -220,6 +224,7 @@ sub thumbs_file {
 	$cmd .= '" -frames:v 1 -q:v 1 "./screens/'.$filename.'.jpg"';
 	print ', Saving jpg';
 	`$cmd`;
+	print ' ['.get_file_size('./screens/'.$filename.'.jpg').']';
 	
 	return 0;
 }
