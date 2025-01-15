@@ -24,7 +24,7 @@
 
 
 # Quality setting
-my $PNG_QUALITY = 2; # [1-31]
+my $PNG_QUALITY = 1; # [1-31]
 
 
 
@@ -34,12 +34,14 @@ my $PNG_QUALITY = 2; # [1-31]
 
 use strict;
 
+# Find the first available media file in the script folder
 my $file;
 my $filename;
 my $filetype;
 opendir(my $DIR, '.');
 foreach my $de (readdir($DIR)) {
 	if ($de =~ /^(.+)\.(mp4|mkv|mov|avi|mpg|mpeg|wmv|m4v|flv|f4v)$/i) {
+		# Found one, select this file
 		$filename = $1;
 		$filetype = $2;
 		$file = $de;
@@ -49,11 +51,12 @@ foreach my $de (readdir($DIR)) {
 }
 closedir($DIR);
 
-die 'ERROR - Folder "'.$filename.'" allready exist' if (-d $filename);
+# Create folder for all the frames
+mkdir($filename) or die 'ERROR: Could not create "'.$filename.'" folder'."\n" unless (-d $filename);
 
-mkdir($filename);
-
-`ffmpeg -y -v error -stats -i "$file" -q:v 2 "$filename/frame_%06d.png"`;
+# Create command and run
+my $cmd = 'ffmpeg -y -v error -stats -i "'.$file.'" -q:v 2 "'.$filename.'/frame_%06d.png"';
+`$cmd`;
 
 print 'Done'."\n";
 
