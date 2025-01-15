@@ -23,9 +23,10 @@
 
 
 # Quality setting
-# my $X265_QUALITY = 18; # Virtually lossless
-# my $X265_QUALITY = 22; # Small files, visually very close to identical
-my $X265_QUALITY = 28; # Small files, but may generate visual artifacts
+# 18= Virtually lossless
+# 22= Small files, visually very close to identical
+# 28= Even smaller files, but may generate visual artifacts
+my $X265_QUALITY = 28;
 
 # X265 preset
 my $X265_PRESET = 'medium'; # slower/slow/medium/fast/veryfast
@@ -41,6 +42,9 @@ my $X265_MAX_BITRATE = 10000; # Kbit/s
 
 use strict;
 
+
+
+# Print script path
 print '['.$0.']'."\n";
 
 # Start processing from the current directory
@@ -83,7 +87,7 @@ sub process_directory {
 				# This file has been Re-encoded, skip
 				print ' re-encoded file, skipping...'."\n";
 				
-			} elsif (-e ($directory.'/'.$filename.'-ReEncode-'.$X265_QUALITY.'.mp4')) {
+			} elsif (-e $directory.'/'.$filename.'-ReEncode-'.$X265_QUALITY.'.mp4') {
 				# Re-encoded file exist, skip
 				print ' allready re-encoded, skipping...'."\n";
 				
