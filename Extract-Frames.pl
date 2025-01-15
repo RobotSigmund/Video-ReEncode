@@ -34,6 +34,11 @@ my $PNG_QUALITY = 1; # [1-31]
 
 use strict;
 
+
+
+# Print script path
+print '['.$0.']'."\n";
+
 # Find the first available media file in the script folder
 my $file;
 my $filename;
@@ -45,6 +50,7 @@ foreach my $de (readdir($DIR)) {
 		$filename = $1;
 		$filetype = $2;
 		$file = $de;
+		print $de."\n";
 		last;
 	}
 	
