@@ -10,7 +10,7 @@ Default settings:
 * Container: MP4, video: x265, audio: aac/128/stereo
 * Fast profile
 * Quality Setting of 28
-* Max bitrate of 10000Kbit/s
+* Max bitrate of 10Mbit/s
 
 This will generally encode 1080p files with minor artifacts quality wise. A setting of 22 will produce allmost identical quality, but much smaller filesize than any mobile or camera will generate. For as good as lossless and identical quality choose 18.
 
