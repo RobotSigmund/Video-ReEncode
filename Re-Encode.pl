@@ -29,10 +29,11 @@
 my $X265_QUALITY = 28;
 
 # X265 preset
+# Recommended good settings are 'fast' for shorter encoding times, and 'slow' for better quality.
 my $X265_PRESET = 'fast'; # slower/slow/medium/fast/veryfast
 
-# Max bitrate, you may want to increase this for higher resolutions than 1080p
-my $X265_MAX_BITRATE = 10000; # Kbit/s
+# Max bitrate, you may want to increase this for higher resolutions like 4K
+my $X265_MAX_BITRATE = 10_000_000; # 10 Mbit/s
 
 
 
