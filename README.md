@@ -16,7 +16,9 @@ This will generally encode 1080p files with minor artifacts quality wise. A sett
 
 Note: For 4k footage you may want to increase max bitrate setting, however it will most likely be just fine at 10K.
 
-Read more about x265 encoding here: [https://kokomins.wordpress.com/2019/10/10/anime-encoding-guide-for-x265-and-why-to-never-use-flac/](https://kokomins.wordpress.com/2019/10/10/anime-encoding-guide-for-x265-and-why-to-never-use-flac/)
+Read more about x265 encoding here: [Anime Encoding Guide for x265 (HEVC) & AAC/OPUS (and Why to Never Use FLAC)](https://kokomins.wordpress.com/2019/10/10/anime-encoding-guide-for-x265-and-why-to-never-use-flac/)
+
+More recommendations for bitrates and resolutions: [YouTube recommended upload encoding settings](https://support.google.com/youtube/answer/1722171?sjid=181486248341066613-EU)
 
 ## Extract-Frames.pl
 
