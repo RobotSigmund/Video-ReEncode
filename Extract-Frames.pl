@@ -50,7 +50,7 @@ foreach my $de (readdir($DIR)) {
 		$filename = $1;
 		$filetype = $2;
 		$file = $de;
-		print $de."\n";
+		print 'File: '.$de.' working...'."\n";
 		last;
 	}
 	
