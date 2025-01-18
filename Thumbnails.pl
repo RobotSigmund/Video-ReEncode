@@ -23,9 +23,10 @@
 
 
 
-our $CFG_THUMBSIZE = 240; # Max X or Y dimension of the thumbnails
+our $CFG_THUMBSIZE = 300; # Max X or Y dimension of the thumbnails
 our $CFG_COLUMNS = 0.9; # multiplier of screen width of 1920
-our $CFG_ROWS = 3; # multiplier of screen height of 1080
+our $CFG_ROWS = 2.2; # multiplier of screen height of 1080
+our $CFG_JPEGQUALITY = 3; # output image quality [1-31] (1=best)
 
 
 
@@ -103,6 +104,11 @@ sub process_file {
 	# Create thumbs and collage image
 	my $status = thumbs_file($folder, $filename, $type);
 	
+	if ($status) {	
+		print ', failed'."\n";
+		return;
+	}
+
 	# Delete tempframes and workdir	
 	print ', Deleting tempfiles';	
 	opendir(my $DIR, $folder.'/'.$filename.'-temp');
@@ -113,11 +119,7 @@ sub process_file {
 	closedir($DIR);
 	rmdir($folder.'/'.$filename.'-temp') or warn 'ERROR: Could not delete temporary folder "'.$folder.'/'.$filename.'-temp"'."\n";
 	
-	if ($status) {
-		print ', failed'."\n";
-	} else {
-		print ', ok'."\n";
-	}
+	print ', ok'."\n";
 }
 
 
@@ -165,7 +167,7 @@ sub thumbs_file {
 	$cmd = 'ffprobe -v error -select_streams v:0 -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "'.$folder.'/'.$filename.'.'.$type.'"';
 	my $duration = `$cmd`;
 	chomp($duration);
-	print ', Duration: ['.$duration.']';
+	print ', Duration: ['.get_duration($duration).']';
 
 	# Find filesize
 	my $filesize = get_file_size($folder.'/'.$filename.'.'.$type);
@@ -197,7 +199,10 @@ sub thumbs_file {
 	$cmd .= '\'';
 	$cmd .= ',scale='.$scaled_width.':'.$scaled_height;
 	$cmd .= ',unsharp=5:5:1.0';
-	$cmd .= '" -vsync vfr -q:v 1 "'.$folder.'/'.$filename.'-temp/frame%d.jpg'.'"';
+	$cmd .= '" -vsync vfr -q:v 1 "'.$folder.'/'.$filename.'-temp/frame%d.png'.'"';
+	open(my $ELOG, '>>'.$folder.'/'.$filename.'-temp/Thumbnails.log');
+	print $ELOG $cmd."\n\n";
+	close($ELOG);
 	`$cmd`;
 	
 	# Create "screens" folder if necessary
@@ -206,7 +211,7 @@ sub thumbs_file {
 	# Build ffmpeg command for composite image
 	$cmd = 'ffmpeg -y -v quiet';
 	foreach my $i (1..($cols * $rows)) {
-		$cmd .= ' -i "'.$folder.'/'.$filename.'-temp/frame'.$i.'.jpg'.'"'
+		$cmd .= ' -i "'.$folder.'/'.$filename.'-temp/frame'.$i.'.png'.'"'
 	}
 	$cmd .= ' -filter_complex "';
 	foreach my $i (1..($cols * $rows)) {
@@ -222,10 +227,16 @@ sub thumbs_file {
 	$cmd .= ',drawtext=fontfile=\'C\:/Windows/Fonts/calibri.ttf\':text=\''.get_escaped($folder.'/'.$filename.'.'.$type).'\':x=10:y=10:fontsize=50:fontcolor=white:box=1:boxcolor=black@0.4';	
 	$cmd .= ',drawtext=fontfile=\'C\:/Windows/Fonts/calibri.ttf\':text=\''.get_escaped($filesize.', '.get_duration($duration).', '.$frame_width.'x'.$frame_height.', '.get_averate_bitrate($bitrate_avg)).'\':x=10:y=60:fontsize=50:fontcolor=white:box=1:boxcolor=black@0.4';
 	$cmd .= ',scale='.($cols * $scaled_width).':'.($rows * $scaled_height);
-	$cmd .= '" -frames:v 1 -q:v 1 "./screens/'.$filename.'.jpg"';
+	$cmd .= '" -frames:v 1 -qmin 1 -q:v '.$CFG_JPEGQUALITY.' "./screens/'.$filename.'.jpg"';
 	print ', Saving jpg';
 	`$cmd`;
 	print ' ['.get_file_size('./screens/'.$filename.'.jpg').']';
+	unless (get_file_size('./screens/'.$filename.'.jpg') =~ /^\d+/) {
+		open(my $ELOG, '>>Thumbnails.log');
+		print $ELOG 'ERROR: Produced no file'."\n".$cmd."\n\n";
+		close($ELOG);
+		return 2;
+	}
 	
 	return 0;
 }
