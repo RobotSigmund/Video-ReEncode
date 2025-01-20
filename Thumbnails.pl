@@ -199,7 +199,7 @@ sub thumbs_file {
 	$cmd .= '\'';
 	$cmd .= ',scale='.$scaled_width.':'.$scaled_height;
 	$cmd .= ',unsharp=5:5:1.0';
-	$cmd .= '" -vsync vfr -q:v 1 "'.$folder.'/'.$filename.'-temp/frame%d.png'.'"';
+	$cmd .= '" -vsync vfr -compression_level 0 "'.$folder.'/'.$filename.'-temp/frame%d.png'.'"';
 	open(my $ELOG, '>>'.$folder.'/'.$filename.'-temp/Thumbnails.log');
 	print $ELOG $cmd."\n\n";
 	close($ELOG);
