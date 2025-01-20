@@ -24,7 +24,7 @@
 
 
 # Quality setting
-my $PNG_QUALITY = 1; # [1-31]
+my $CFG_PNG_COMPRESSION = 8; # [1-31]
 
 
 
@@ -61,7 +61,7 @@ closedir($DIR);
 mkdir($filename) or die 'ERROR: Could not create "'.$filename.'" folder'."\n" unless (-d $filename);
 
 # Create command and run
-my $cmd = 'ffmpeg -y -v error -stats -i "'.$file.'" -q:v 2 "'.$filename.'/frame_%06d.png"';
+my $cmd = 'ffmpeg -y -v error -stats -i "'.$file.'" -compression_level '.$CFG_PNG_COMPRESSION.' "'.$filename.'/frame_%06d.png"';
 `$cmd`;
 
 print 'Done'."\n";
