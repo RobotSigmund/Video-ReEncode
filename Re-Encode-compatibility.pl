@@ -85,7 +85,7 @@ sub process_directory {
 			
 			print 'File: ' . $entry_path;
 			
-			if ($de =~ /-ReEncode-$X264_QUALITY\.$suffix$/i) {
+			if ($de =~ /-ReEncode-\d+(-noaudio)?\.$suffix$/i) {
 				# This file has been Re-encoded, skip
 				print ' re-encoded file, skipping...' . "\n";
 				
