@@ -35,16 +35,16 @@ our $CFG_JPEGQUALITY = 3; # output image quality [1-31] (1=best)
 
 
 use strict;
+use Cwd;
 
 
-
-# Print script path
-print '['.$0.']'."\n";
+# Print current active path
+print '[' . cwd() . ']' . "\n";
 
 # Start processing from the current directory
 process_directory('.');
 
-print "\n".'Done!'."\n";
+print "\n" . 'Done!' . "\n";
 
 <STDIN>;
 
@@ -62,7 +62,7 @@ sub process_directory {
 		next if ($de =~ /^\.{1,2}$/);
 		
 		# Full path to the current directory entry
-		my $entry_path = $directory.'/'.$de;
+		my $entry_path = $directory . '/' . $de;
 		
 		if (-d $entry_path) {
 			# This is a folder, call this routine recursively
@@ -75,11 +75,11 @@ sub process_directory {
 			my $filename = $1;
 			my $suffix = $2;
 			
-			print 'File: '.$entry_path;
+			print 'File: ' . $entry_path;
 			
-			if (-e './screens/'.$filename.'.jpg') {
+			if (-e './screens/' . $filename . '.jpg') {
 				# Thumbs file exist, skip
-				print ' allready thumbed, skipping...'."\n";
+				print ' allready thumbed, skipping...' . "\n";
 				
 			} else {
 				# Thumbify
@@ -96,30 +96,30 @@ sub process_directory {
 sub process_file {
 	my($folder, $filename, $type) = @_;
 	
-	print ' working...'."\n";
+	print ' working...' . "\n";
 	
 	# Make temp folder
-	mkdir($folder.'/'.$filename.'-temp');
+	mkdir($folder . '/' . $filename . '-temp');
 
 	# Create thumbs and collage image
 	my $status = thumbs_file($folder, $filename, $type);
 	
 	if ($status) {	
-		print ', failed'."\n";
+		print ', failed' . "\n";
 		return;
 	}
 
 	# Delete tempframes and workdir	
 	print ', Deleting tempfiles';	
-	opendir(my $DIR, $folder.'/'.$filename.'-temp');
+	opendir(my $DIR, $folder . '/' . $filename . '-temp');
 	foreach my $de (readdir($DIR)) {
 		next if ($de =~ /^\.{1,2}$/);
-		unlink($folder.'/'.$filename.'-temp/'.$de) or warn 'ERROR: Could not delete temporary file "'.$folder.'/'.$filename.'-temp/'.$de.'"'."\n";
+		unlink($folder . '/' . $filename . '-temp/' . $de) or warn 'ERROR: Could not delete temporary file "' . $folder . '/' . $filename . '-temp/' . $de . '"' . "\n";
 	}
 	closedir($DIR);
-	rmdir($folder.'/'.$filename.'-temp') or warn 'ERROR: Could not delete temporary folder "'.$folder.'/'.$filename.'-temp"'."\n";
+	rmdir($folder . '/' . $filename . '-temp') or warn 'ERROR: Could not delete temporary folder "' . $folder . '/' . $filename . '-temp"' . "\n";
 	
-	print ', ok'."\n";
+	print ', ok' . "\n";
 }
 
 
@@ -128,49 +128,49 @@ sub thumbs_file {
 	my($folder, $filename, $type) = @_;
 	
 	# Find media file framecount
-	my $cmd = 'ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "'.$folder.'/'.$filename.'.'.$type.'"';
+	my $cmd = 'ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=noprint_wrappers=1:nokey=1 "' . $folder . '/' . $filename . '.' . $type . '"';
 	my $frame_count = `$cmd`;
 	chomp($frame_count);
-	print '  Frames: ['.$frame_count.']';
+	print '  Frames: [' . $frame_count . ']';
 	unless (defined $frame_count && $frame_count =~ /^[\d]+$/) {
-		warn 'ERROR: Frame count doesn\'t look like a valid number'."\n";
+		warn 'ERROR: Frame count doesn\'t look like a valid number' . "\n";
 		return 1;
 	}
 
 	# Find media file frame width
-	$cmd = 'ffprobe -v error -select_streams v:0 -show_entries stream=width -of default=noprint_wrappers=1:nokey=1 "'.$folder.'/'.$filename.'.'.$type.'"';
+	$cmd = 'ffprobe -v error -select_streams v:0 -show_entries stream=width -of default=noprint_wrappers=1:nokey=1 "' . $folder . '/' . $filename . '.' . $type . '"';
 	my $frame_width = `$cmd`;
 	chomp($frame_width);
-	print ', Width: ['.$frame_width.']';
+	print ', Width: [' . $frame_width . ']';
 	unless (defined $frame_width && $frame_width =~ /^[\d]+$/) {
-		warn 'ERROR: Frame width doesn\'t look like a valid number'."\n";
+		warn 'ERROR: Frame width doesn\'t look like a valid number' . "\n";
 		return 1;
 	}
 
 	# Find media file frame height
-	$cmd = 'ffprobe -v error -select_streams v:0 -show_entries stream=height -of default=noprint_wrappers=1:nokey=1 "'.$folder.'/'.$filename.'.'.$type.'"';
+	$cmd = 'ffprobe -v error -select_streams v:0 -show_entries stream=height -of default=noprint_wrappers=1:nokey=1 "' . $folder . '/' . $filename . '.' . $type . '"';
 	my $frame_height = `$cmd`;
 	chomp($frame_height);
-	print ', Height: ['.$frame_height.']';
+	print ', Height: [' . $frame_height . ']';
 	unless (defined $frame_height && $frame_height =~ /^[\d]+$/) {
-		warn 'ERROR: Frame height doesn\'t look like a valid number'."\n";
+		warn 'ERROR: Frame height doesn\'t look like a valid number' . "\n";
 		return 1;
 	}
 	
 	# Find media average bitrate
-	$cmd = 'ffprobe -v error -select_streams v:0 -show_entries format=bit_rate -of default=noprint_wrappers=1:nokey=1 "'.$folder.'/'.$filename.'.'.$type.'"';
+	$cmd = 'ffprobe -v error -select_streams v:0 -show_entries format=bit_rate -of default=noprint_wrappers=1:nokey=1 "' . $folder . '/' . $filename . '.' . $type . '"';
 	my $bitrate_avg = `$cmd`;
 	chomp($bitrate_avg);
-	print ', Avg. bitrate: ['.$bitrate_avg.']';
+	print ', Avg. bitrate: [' . $bitrate_avg . ']';
 
 	# Find media duration
-	$cmd = 'ffprobe -v error -select_streams v:0 -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "'.$folder.'/'.$filename.'.'.$type.'"';
+	$cmd = 'ffprobe -v error -select_streams v:0 -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "' . $folder . '/' . $filename . '.' . $type . '"';
 	my $duration = `$cmd`;
 	chomp($duration);
-	print ', Duration: ['.get_duration($duration).']';
+	print ', Duration: [' . get_duration($duration) . ']';
 
 	# Find filesize
-	my $filesize = get_file_size($folder.'/'.$filename.'.'.$type);
+	my $filesize = get_file_size($folder . '/' . $filename . '.' . $type);
 	
 	# Calculate thumbs dimensions
 	my $scaled_width;
@@ -188,52 +188,52 @@ sub thumbs_file {
 	my $rows = int(1080 / $scaled_height * $CFG_ROWS);
 	
 	# Extract thumb frames into temp folder
-	print ', Generating '.($cols * $rows).' thumbnails';
-	$cmd = 'ffmpeg -y -v error -i "'.$folder.'/'.$filename.'.'.$type.'" -vf "';
+	print ', Generating ' . ($cols * $rows) . ' thumbnails';
+	$cmd = 'ffmpeg -y -v error -i "' . $folder . '/' . $filename . '.' . $type . '" -vf "';
 	$cmd .= 'select=\'';
 	foreach my $i (1..($cols * $rows)) {
 		my $frame = $i * ($frame_count / (($cols * $rows) + 1));
-		$cmd .= 'eq(n\,'.int($frame).')';
+		$cmd .= 'eq(n\,' . int($frame) . ')';
 		$cmd .= '+' if ($i < ($cols * $rows));
 	}	
 	$cmd .= '\'';
-	$cmd .= ',scale='.$scaled_width.':'.$scaled_height;
+	$cmd .= ',scale=' . $scaled_width . ':' . $scaled_height;
 	$cmd .= ',unsharp=5:5:1.0';
-	$cmd .= '" -vsync vfr -compression_level 0 "'.$folder.'/'.$filename.'-temp/frame%d.png'.'"';
-	open(my $ELOG, '>>'.$folder.'/'.$filename.'-temp/Thumbnails.log');
-	print $ELOG $cmd."\n\n";
+	$cmd .= '" -vsync vfr -compression_level 0 "' . $folder . '/' . $filename . '-temp/frame%d.png' . '"';
+	open(my $ELOG, '>>' . $folder . '/' . $filename . '-temp/Thumbnails.log');
+	print $ELOG $cmd . "\n\n";
 	close($ELOG);
 	`$cmd`;
 	
 	# Create "screens" folder if necessary
-	mkdir('./screens') or die 'ERROR: Could not create "screens" folder'."\n" unless (-d './screens');
+	mkdir('./screens') or die 'ERROR: Could not create "screens" folder' . "\n" unless (-d './screens');
 	
 	# Build ffmpeg command for composite image
 	$cmd = 'ffmpeg -y -v quiet';
 	foreach my $i (1..($cols * $rows)) {
-		$cmd .= ' -i "'.$folder.'/'.$filename.'-temp/frame'.$i.'.png'.'"'
+		$cmd .= ' -i "' . $folder . '/' . $filename . '-temp/frame' . $i . '.png' . '"'
 	}
 	$cmd .= ' -filter_complex "';
 	foreach my $i (1..($cols * $rows)) {
-		$cmd .= '['.($i - 1).':v]';
+		$cmd .= '[' . ($i - 1) . ':v]';
 	}
-	$cmd .= 'xstack=inputs='.($cols * $rows).':layout=';
+	$cmd .= 'xstack=inputs=' . ($cols * $rows) . ':layout=';
 	foreach my $row (0..($rows - 1)) {
 		foreach my $col (0..($cols - 1)) {
-			$cmd .= ($col * $scaled_width).'_'.($row * $scaled_height);
+			$cmd .= ($col * $scaled_width) . '_' . ($row * $scaled_height);
 			$cmd .= '|' if (($row < ($rows - 1)) || ($col < ($cols - 1)));
 		}
 	}
-	$cmd .= ',drawtext=fontfile=\'C\:/Windows/Fonts/calibri.ttf\':text=\''.get_escaped($folder.'/'.$filename.'.'.$type).'\':x=10:y=10:fontsize=50:fontcolor=white:box=1:boxcolor=black@0.4';	
-	$cmd .= ',drawtext=fontfile=\'C\:/Windows/Fonts/calibri.ttf\':text=\''.get_escaped($filesize.', '.get_duration($duration).', '.$frame_width.'x'.$frame_height.', '.get_averate_bitrate($bitrate_avg)).'\':x=10:y=60:fontsize=50:fontcolor=white:box=1:boxcolor=black@0.4';
-	$cmd .= ',scale='.($cols * $scaled_width).':'.($rows * $scaled_height);
-	$cmd .= '" -frames:v 1 -qmin 1 -q:v '.$CFG_JPEGQUALITY.' "./screens/'.$filename.'.jpg"';
+	$cmd .= ',drawtext=fontfile=\'C\:/Windows/Fonts/calibri.ttf\':text=\'' . get_escaped($folder . '/' . $filename . '.' . $type) . '\':x=10:y=10:fontsize=50:fontcolor=white:box=1:boxcolor=black@0.4';	
+	$cmd .= ',drawtext=fontfile=\'C\:/Windows/Fonts/calibri.ttf\':text=\'' . get_escaped($filesize . ', ' . get_duration($duration) . ', ' . $frame_width . 'x' . $frame_height . ', ' . get_averate_bitrate($bitrate_avg)) . '\':x=10:y=60:fontsize=50:fontcolor=white:box=1:boxcolor=black@0.4';
+	$cmd .= ',scale=' . ($cols * $scaled_width) . ':' . ($rows * $scaled_height);
+	$cmd .= '" -frames:v 1 -qmin 1 -q:v ' . $CFG_JPEGQUALITY . ' "./screens/' . $filename . '.jpg"';
 	print ', Saving jpg';
 	`$cmd`;
-	print ' ['.get_file_size('./screens/'.$filename.'.jpg').']';
-	unless (get_file_size('./screens/'.$filename.'.jpg') =~ /^\d+/) {
+	print ' [' . get_file_size('./screens/' . $filename . '.jpg') . ']';
+	unless (get_file_size('./screens/' . $filename . '.jpg') =~ /^\d+/) {
 		open(my $ELOG, '>>Thumbnails.log');
-		print $ELOG 'ERROR: Produced no file'."\n".$cmd."\n\n";
+		print $ELOG 'ERROR: Produced no file' . "\n" . $cmd . "\n\n";
 		close($ELOG);
 		return 2;
 	}
@@ -258,7 +258,7 @@ sub get_file_size {
     return sprintf("%.1f KB", $filesize / 1_000) if ($filesize > 900);
 
 	# Or return small size
-    return $filesize.' bytes';
+    return $filesize . ' bytes';
 }
 
 
@@ -306,5 +306,5 @@ sub get_averate_bitrate {
     return sprintf("%.1f Kbit/s", $bitrate / 1_000) if ($bitrate > 900);
 
 	# Or return small bitrate
-    return $bitrate.' bit/s';
+    return $bitrate . ' bit/s';
 }
