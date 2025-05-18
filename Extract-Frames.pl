@@ -33,11 +33,11 @@ my $CFG_PNG_COMPRESSION = 8; # [1-31]
 
 
 use strict;
+use Cwd;
 
 
-
-# Print script path
-print '['.$0.']'."\n";
+# Print current active path
+print '[' . cwd() . ']' . "\n";
 
 # Find the first available media file in the script folder
 my $file;
@@ -45,12 +45,12 @@ my $filename;
 my $filetype;
 opendir(my $DIR, '.');
 foreach my $de (readdir($DIR)) {
-	if ($de =~ /^(.+)\.(mp4|mkv|mov|avi|mpg|mpeg|wmv|m4v|flv|f4v)$/i) {
+	if ($de =~ /^(.+)\.(mp4|mkv|mov|avi|mpg|mpeg|wmv|m4v|flv|f4v|vob|divx)$/i) {
 		# Found one, select this file
 		$filename = $1;
 		$filetype = $2;
 		$file = $de;
-		print 'File: '.$de.' working...'."\n";
+		print 'File: ' . $de . ' working...' . "\n";
 		last;
 	}
 	
@@ -58,10 +58,10 @@ foreach my $de (readdir($DIR)) {
 closedir($DIR);
 
 # Create folder for all the frames
-mkdir($filename) or die 'ERROR: Could not create "'.$filename.'" folder'."\n" unless (-d $filename);
+mkdir($filename) or die 'ERROR: Could not create "' . $filename . '" folder' . "\n" unless (-d $filename);
 
 # Create command and run
-my $cmd = 'ffmpeg -y -v error -stats -i "'.$file.'" -compression_level '.$CFG_PNG_COMPRESSION.' "'.$filename.'/frame_%06d.png"';
+my $cmd = 'ffmpeg -y -v error -stats -i "' . $file . '" -compression_level ' . $CFG_PNG_COMPRESSION . ' "' . $filename . '/frame_%06d.png"';
 `$cmd`;
 
 print 'Done'."\n";
