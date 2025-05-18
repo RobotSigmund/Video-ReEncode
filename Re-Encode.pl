@@ -87,11 +87,11 @@ sub process_directory {
 			
 			if ($de =~ /-ReEncode-$X265_QUALITY\.$suffix$/i) {
 				# This file has been Re-encoded, skip
-				print ' re-encoded file, skipping...'."\n";
+				print ' re-encoded file, skipping...' . "\n";
 				
 			} elsif (-e $directory . '/' . $filename . '-ReEncode-' . $X265_QUALITY . '.mp4') {
 				# Re-encoded file exist, skip
-				print ' allready re-encoded, skipping...'."\n";
+				print ' allready re-encoded, skipping...' . "\n";
 				
 			} else {
 				# Re-encode
