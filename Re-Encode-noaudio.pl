@@ -43,16 +43,16 @@ my $X265_MAX_BITRATE = 10_000_000; # 10 Mbit/s
 
 
 use strict;
+use Cwd;
 
 
-
-# Print script path
-print '['.$0.']'."\n";
+# Print current active path
+print '[' . cwd() . ']' . "\n";
 
 # Start processing from the current directory
 process_directory('.');
 
-print 'Done'."\n";
+print 'Done' . "\n";
 
 <STDIN>;
 
@@ -70,7 +70,7 @@ sub process_directory {
 		next if ($de =~ /^\.{1,2}$/);
 		
 		# Full path to the current directory entry
-		my $entry_path = $directory.'/'.$de;
+		my $entry_path = $directory . '/' . $de;
 		
 		if (-d $entry_path) {
 			# This is a folder, call this routine recursively
@@ -83,21 +83,21 @@ sub process_directory {
 			my $filename = $1;
 			my $suffix = $2;
 			
-			print 'File: '.$entry_path;
+			print 'File: ' . $entry_path;
 			
 			if ($de =~ /-ReEncode-$X265_QUALITY(-noaudio)?\.$suffix$/i) {
 				# This file has been Re-encoded, skip
-				print ' re-encoded file, skipping...'."\n";
+				print ' re-encoded file, skipping...' . "\n";
 				
-			} elsif (-e $directory.'/'.$filename.'-ReEncode-'.$X265_QUALITY.'-noaudio.mp4') {
+			} elsif (-e $directory . '/' . $filename . '-ReEncode-' . $X265_QUALITY . '-noaudio.mp4') {
 				# Re-encoded file exist, skip
-				print ' allready re-encoded, skipping...'."\n";
+				print ' allready re-encoded, skipping...' . "\n";
 				
 			} else {
 				# Re-encode
 
-				print ' re-encoding...'."\n";
-				my $cmd = 'ffmpeg -y -v error -stats -i "'.$entry_path.'" -c:v libx265 -crf '.$X265_QUALITY.' -preset '.$X265_PRESET.' -pix_fmt yuv420p10le -x265-params vbv-maxrate='.$X265_MAX_BITRATE.':vbv-bufsize='.($X265_MAX_BITRATE * 2).':log-level=1 -an "'.$directory.'/'.$filename.'-ReEncode-'.$X265_QUALITY.'-noaudio.mp4"';
+				print ' re-encoding...' . "\n";
+				my $cmd = 'ffmpeg -y -v error -stats -i "' . $entry_path . '" -c:v libx265 -crf ' . $X265_QUALITY . ' -preset ' . $X265_PRESET . ' -pix_fmt yuv420p10le -x265-params vbv-maxrate=' . $X265_MAX_BITRATE . ':vbv-bufsize=' . ($X265_MAX_BITRATE * 2) . ':log-level=1 -an "' . $directory . '/' . $filename . '-ReEncode-' . $X265_QUALITY . '-noaudio.mp4"';
 				`$cmd`;
 				print "\n";
 			}
