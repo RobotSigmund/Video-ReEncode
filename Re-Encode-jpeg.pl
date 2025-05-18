@@ -36,16 +36,16 @@ my $JPEG_QUALITY = 5;
 
 
 use strict;
+use Cwd;
 
 
-
-# Print script path
-print '['.$0.']'."\n";
+# Print current active path
+print '[' . cwd() . ']' . "\n";
 
 # Start processing from the current directory
 process_directory('.');
 
-print 'Done'."\n";
+print 'Done' . "\n";
 
 <STDIN>;
 
@@ -63,7 +63,7 @@ sub process_directory {
 		next if ($de =~ /^\.{1,2}$/);
 		
 		# Full path to the current directory entry
-		my $entry_path = $directory.'/'.$de;
+		my $entry_path = $directory . '/' . $de;
 		
 		if (-d $entry_path) {
 			# This is a folder, call this routine recursively
@@ -76,21 +76,21 @@ sub process_directory {
 			my $filename = $1;
 			my $suffix = $2;
 			
-			print 'File: '.$entry_path;
+			print 'File: ' . $entry_path;
 			
 			if ($de =~ /-ReEncode-$JPEG_QUALITY\.$suffix$/i) {
 				# This file has been Re-encoded, skip
-				print ' re-encoded file, skipping...'."\n";
+				print ' re-encoded file, skipping...' . "\n";
 				
-			} elsif (-e $directory.'/'.$filename.'-ReEncode-'.$JPEG_QUALITY.'.mp4') {
+			} elsif (-e $directory . '/' . $filename . '-ReEncode-' . $JPEG_QUALITY . '.mp4') {
 				# Re-encoded file exist, skip
-				print ' allready re-encoded, skipping...'."\n";
+				print ' allready re-encoded, skipping...' . "\n";
 				
 			} else {
 				# Re-encode
 
-				print ' re-encoding...'."\n";
-				my $cmd = 'ffmpeg -y -v error -stats -i "' . $entry_path . '" -q:v '.$JPEG_QUALITY.' "'.$directory.'/'.$filename.'-ReEncode-'.$JPEG_QUALITY.'.jpg"';
+				print ' re-encoding...' . "\n";
+				my $cmd = 'ffmpeg -y -v error -stats -i "' . $entry_path . '" -q:v ' . $JPEG_QUALITY . ' "' . $directory . '/' . $filename . '-ReEncode-' . $JPEG_QUALITY . '.jpg"';
 				`$cmd`;
 				print "\n";
 			}
