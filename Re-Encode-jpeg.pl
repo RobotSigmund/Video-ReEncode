@@ -82,7 +82,7 @@ sub process_directory {
 				# This file has been Re-encoded, skip
 				print ' re-encoded file, skipping...' . "\n";
 				
-			} elsif (-e $directory . '/' . $filename . '-ReEncode-' . $JPEG_QUALITY . '.mp4') {
+			} elsif (-e $directory . '/' . $filename . '-ReEncode-' . $JPEG_QUALITY . '.jpg') {
 				# Re-encoded file exist, skip
 				print ' allready re-encoded, skipping...' . "\n";
 				
