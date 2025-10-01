@@ -76,7 +76,7 @@ sub process_directory {
 			# This is a folder, call this routine recursively
 			process_directory($entry_path);
 			
-		} elsif ($de =~ /^(.+)\.(mp4|mkv|mov|avi|mpg|mpeg|wmv|m4v|flv|f4v|vob|divx)$/i) {
+		} elsif ($de =~ /^(.+)\.(mp4|mkv|mov|avi|mpg|mpeg|wmv|m4v|flv|f4v|vob|divx|webm)$/i) {
 			# This is a videofile
 
   			# Get filename and type from regex above
