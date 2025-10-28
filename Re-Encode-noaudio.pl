@@ -33,9 +33,6 @@ my $X265_QUALITY = 28;
 # Recommended good settings are 'fast' for shorter encoding times, and 'slow' for better quality.
 my $X265_PRESET = 'fast'; # slower/slow/medium/fast/veryfast
 
-# Max bitrate, you may want to increase this for higher resolutions like 4K
-my $X265_MAX_BITRATE = 10_000_000; # 10 Mbit/s
-
 
 
 # No need to edit below here
@@ -97,7 +94,7 @@ sub process_directory {
 				# Re-encode
 
 				print ' re-encoding...' . "\n";
-				my $cmd = 'ffmpeg -y -v error -stats -i "' . $entry_path . '" -c:v libx265 -crf ' . $X265_QUALITY . ' -preset ' . $X265_PRESET . ' -pix_fmt yuv420p10le -x265-params vbv-maxrate=' . $X265_MAX_BITRATE . ':vbv-bufsize=' . ($X265_MAX_BITRATE * 2) . ':log-level=1 -an "' . $directory . '/' . $filename . '-ReEncode-' . $X265_QUALITY . '-noaudio.mp4"';
+				my $cmd = 'ffmpeg -y -v error -stats -i "' . $entry_path . '" -c:v libx265 -crf ' . $X265_QUALITY . ' -preset ' . $X265_PRESET . ' -pix_fmt yuv420p10le -x265-params log-level=1 -an "' . $directory . '/' . $filename . '-ReEncode-' . $X265_QUALITY . '-noaudio.mp4"';
 				`$cmd`;
 				print "\n";
 			}

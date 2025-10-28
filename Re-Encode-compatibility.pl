@@ -33,9 +33,6 @@ my $X264_QUALITY = 31;
 # For high compatibility and ease of decoding I've set this to 'veryfast'.
 my $X264_PRESET = 'veryfast'; # slower/slow/medium/fast/veryfast
 
-# Max bitrate, you may want to increase this for higher resolutions like 4K
-my $X264_MAX_BITRATE = 10_000_000; # 10 Mbit/s
-
 
 
 # No need to edit below here
@@ -97,7 +94,7 @@ sub process_directory {
 				# Re-encode
 
 				print ' re-encoding...'."\n";
-				my $cmd = 'ffmpeg -y -v error -stats -i "' . $entry_path . '" -c:v libx264 -crf ' . $X264_QUALITY . ' -preset ' . $X264_PRESET . ' -profile:v main -level 4.1 -maxrate ' . $X264_MAX_BITRATE . ' -bufsize ' . ($X264_MAX_BITRATE * 2) . ' -pix_fmt yuv420p -c:a aac -b:a 128k -ac 2 -profile:a aac_low "' . $directory . '/' . $filename . '-ReEncode-' . $X264_QUALITY . '.mp4"';
+				my $cmd = 'ffmpeg -y -v error -stats -i "' . $entry_path . '" -c:v libx264 -crf ' . $X264_QUALITY . ' -preset ' . $X264_PRESET . ' -profile:v main -level 4.1 -pix_fmt yuv420p -c:a aac -b:a 128k -ac 2 -profile:a aac_low "' . $directory . '/' . $filename . '-ReEncode-' . $X264_QUALITY . '.mp4"';
 
 				`$cmd`;
 				print "\n";
