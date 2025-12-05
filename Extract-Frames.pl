@@ -46,7 +46,7 @@ my $filename;
 my $filetype;
 opendir(my $DIR, '.');
 foreach my $de (readdir($DIR)) {
-	if ($de =~ /^(.+)\.(mp4|mkv|mov|avi|mpg|mpeg|wmv|m4v|flv|f4v|vob|divx)$/i) {
+	if ($de =~ /^(.+)\.(mp4|mkv|mov|avi|mpg|mpeg|wmv|m4v|flv|f4v|vob|divx|webm|ts)$/i) {
 		# Found one, select this file
 		$filename = $1;
 		$filetype = $2;
